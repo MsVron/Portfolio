@@ -15,7 +15,31 @@ api.interceptors.request.use(config => {
 export const register = (data) => api.post('/auth/register', data);
 export const login = (data) => api.post('/auth/login', data);
 export const getUser = () => api.get('/auth/me');
-export const updatePortfolioSettings = (data) => api.put('/portfolio/settings', data);
-// Add more API calls as needed
+export const updateProfile = (data) => api.put('/profile', data);
+export const getPortfolioSettings = () => api.get('/profile/settings');
+export const updatePortfolioSettings = (data) => api.put('/profile/settings', data);
+export const getProjects = () => api.get('/profile/projects');
+export const addProject = (data) => api.post('/profile/projects', data);
+export const updateProject = (id, data) => api.put(`/profile/projects/${id}`, data);
+export const deleteProject = (id) => api.delete(`/profile/projects/${id}`);
+export const getUserSkills = () => api.get('/profile/skills');
+export const addUserSkill = (data) => api.post('/profile/skills', data);
+export const deleteUserSkill = (id) => api.delete(`/profile/skills/${id}`);
+export const getEducation = () => api.get('/profile/education');
+export const addEducation = (data) => api.post('/profile/education', data);
+export const updateEducation = (id, data) => api.put(`/profile/education/${id}`, data);
+export const deleteEducation = (id) => api.delete(`/profile/education/${id}`);
+export const getWorkExperience = () => api.get('/profile/experience');
+export const addWorkExperience = (data) => api.post('/profile/experience', data);
+export const updateWorkExperience = (id, data) => api.put(`/profile/experience/${id}`, data);
+export const deleteWorkExperience = (id) => api.delete(`/profile/experience/${id}`);
+export const getSocialLinks = () => api.get('/profile/social-links');
+export const addSocialLink = (data) => api.post('/profile/social-links', data);
+export const updateSocialLink = (id, data) => api.put(`/profile/social-links/${id}`, data);
+export const deleteSocialLink = (id) => api.delete(`/profile/social-links/${id}`);
+export const getPortfolioSections = () => api.get('/profile/sections');
+export const addPortfolioSection = (data) => api.post('/profile/sections', data);
+export const updatePortfolioSection = (id, data) => api.put(`/profile/sections/${id}`, data);
+export const deletePortfolioSection = (id) => api.delete(`/profile/sections/${id}`);
 
 export default api;

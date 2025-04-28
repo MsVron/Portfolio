@@ -15,32 +15,34 @@ public class PortfolioSettings {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(name = "theme", columnDefinition = "VARCHAR(50) DEFAULT 'default'")
     private String theme;
 
+    @Column(name = "layout", columnDefinition = "VARCHAR(50) DEFAULT 'standard'")
     private String layout;
 
-    @Column(name = "color_primary")
+    @Column(name = "color_primary", columnDefinition = "VARCHAR(20) DEFAULT '#007bff'")
     private String colorPrimary;
 
-    @Column(name = "color_secondary")
+    @Column(name = "color_secondary", columnDefinition = "VARCHAR(20) DEFAULT '#6c757d'")
     private String colorSecondary;
 
-    @Column(name = "font_family")
+    @Column(name = "font_family", columnDefinition = "VARCHAR(100) DEFAULT 'Roboto, sans-serif'")
     private String fontFamily;
 
     @Column(name = "custom_domain")
     private String customDomain;
 
-    @Column(name = "is_public")
+    @Column(name = "is_public", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isPublic;
 
-    @Column(name = "custom_css")
+    @Column(name = "custom_css", columnDefinition = "TEXT")
     private String customCss;
 
-    @Column(name = "custom_js")
+    @Column(name = "custom_js", columnDefinition = "TEXT")
     private String customJs;
 
-    @Column(name = "meta_description")
+    @Column(name = "meta_description", columnDefinition = "TEXT")
     private String metaDescription;
 
     @Column(name = "meta_keywords")
@@ -53,123 +55,34 @@ public class PortfolioSettings {
     private LocalDateTime updatedAt;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getTheme() {
-        return theme;
-    }
-
-    public void setTheme(String theme) {
-        this.theme = theme;
-    }
-
-    public String getLayout() {
-        return layout;
-    }
-
-    public void setLayout(String layout) {
-        this.layout = layout;
-    }
-
-    public String getColorPrimary() {
-        return colorPrimary;
-    }
-
-    public void setColorPrimary(String colorPrimary) {
-        this.colorPrimary = colorPrimary;
-    }
-
-    public String getColorSecondary() {
-        return colorSecondary;
-    }
-
-    public void setColorSecondary(String colorSecondary) {
-        this.colorSecondary = colorSecondary;
-    }
-
-    public String getFontFamily() {
-        return fontFamily;
-    }
-
-    public void setFontFamily(String fontFamily) {
-        this.fontFamily = fontFamily;
-    }
-
-    public String getCustomDomain() {
-        return customDomain;
-    }
-
-    public void setCustomDomain(String customDomain) {
-        this.customDomain = customDomain;
-    }
-
-    public Boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
-    public String getCustomCss() {
-        return customCss;
-    }
-
-    public void setCustomCss(String customCss) {
-        this.customCss = customCss;
-    }
-
-    public String getCustomJs() {
-        return customJs;
-    }
-
-    public void setCustomJs(String customJs) {
-        this.customJs = customJs;
-    }
-
-    public String getMetaDescription() {
-        return metaDescription;
-    }
-
-    public void setMetaDescription(String metaDescription) {
-        this.metaDescription = metaDescription;
-    }
-
-    public String getMetaKeywords() {
-        return metaKeywords;
-    }
-
-    public void setMetaKeywords(String metaKeywords) {
-        this.metaKeywords = metaKeywords;
-    }
-
-    public String getGoogleAnalyticsId() {
-        return googleAnalyticsId;
-    }
-
-    public void setGoogleAnalyticsId(String googleAnalyticsId) {
-        this.googleAnalyticsId = googleAnalyticsId;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+    public String getTheme() { return theme; }
+    public void setTheme(String theme) { this.theme = theme; }
+    public String getLayout() { return layout; }
+    public void setLayout(String layout) { this.layout = layout; }
+    public String getColorPrimary() { return colorPrimary; }
+    public void setColorPrimary(String colorPrimary) { this.colorPrimary = colorPrimary; }
+    public String getColorSecondary() { return colorSecondary; }
+    public void setColorSecondary(String colorSecondary) { this.colorSecondary = colorSecondary; }
+    public String getFontFamily() { return fontFamily; }
+    public void setFontFamily(String fontFamily) { this.fontFamily = fontFamily; }
+    public String getCustomDomain() { return customDomain; }
+    public void setCustomDomain(String customDomain) { this.customDomain = customDomain; }
+    public Boolean getIsPublic() { return isPublic; }
+    public void setIsPublic(Boolean isPublic) { this.isPublic = isPublic; }
+    public String getCustomCss() { return customCss; }
+    public void setCustomCss(String customCss) { this.customCss = customCss; }
+    public String getCustomJs() { return customJs; }
+    public void setCustomJs(String customJs) { this.customJs = customJs; }
+    public String getMetaDescription() { return metaDescription; }
+    public void setMetaDescription(String metaDescription) { this.metaDescription = metaDescription; }
+    public String getMetaKeywords() { return metaKeywords; }
+    public void setMetaKeywords(String metaKeywords) { this.metaKeywords = metaKeywords; }
+    public String getGoogleAnalyticsId() { return googleAnalyticsId; }
+    public void setGoogleAnalyticsId(String googleAnalyticsId) { this.googleAnalyticsId = googleAnalyticsId; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
