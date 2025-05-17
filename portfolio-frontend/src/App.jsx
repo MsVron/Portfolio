@@ -23,13 +23,13 @@ function App() {
             <main className="flex-grow">
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/portfolio/:username" element={<PortfolioPage />} />
                 <Route element={<PublicRoute />}>
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                 </Route>
                 <Route element={<ProtectedRoute />}>
                   <Route path="/dashboard" element={<DashboardPage />} />
-                  <Route path="/portfolio/:username" element={<PortfolioPage />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>

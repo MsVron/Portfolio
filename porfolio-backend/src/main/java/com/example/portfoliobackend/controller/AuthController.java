@@ -1,6 +1,8 @@
 package com.example.portfoliobackend.controller;
 
+import com.example.portfoliobackend.model.PortfolioSettings;
 import com.example.portfoliobackend.model.User;
+import com.example.portfoliobackend.repository.PortfolioSettingsRepository;
 import com.example.portfoliobackend.repository.UserRepository;
 import com.example.portfoliobackend.util.JwtUtil;
 import jakarta.validation.Valid;
@@ -24,13 +26,16 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final PortfolioSettingsRepository portfolioSettingsRepository;
 
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-                          PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+                          PasswordEncoder passwordEncoder, JwtUtil jwtUtil,
+                          PortfolioSettingsRepository portfolioSettingsRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.portfolioSettingsRepository = portfolioSettingsRepository;
     }
 
     @PostMapping("/register")
@@ -55,7 +60,20 @@ public class AuthController {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 
-        userRepository.save(user);
+        user = userRepository.save(user);
+        
+        // Create default portfolio settings for the new user
+        PortfolioSettings settings = new PortfolioSettings();
+        settings.setUserId(user.getId());
+        settings.setTheme("default");
+        settings.setLayout("standard");
+        settings.setColorPrimary("#007bff");
+        settings.setColorSecondary("#6c757d");
+        settings.setFontFamily("Roboto, sans-serif");
+        settings.setIsPublic(true); // Setting portfolio to public by default
+        settings.setUpdatedAt(LocalDateTime.now());
+        portfolioSettingsRepository.save(settings);
+        
         return ResponseEntity.ok("User registered successfully");
     }
 

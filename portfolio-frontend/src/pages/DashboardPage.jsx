@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import ProfileEditorView from '../components/dashboard/ProfileEditorView';
-import PortfolioPreview from '../components/dashboard/PortfolioPreview';
 import Sidebar from '../components/dashboard/Sidebar';
 import EducationSection from '../components/dashboard/EducationSection';
 import SkillsSection from '../components/dashboard/SkillsSection';
@@ -33,8 +32,6 @@ const DashboardPage = () => {
         return <PortfolioSection />;
       case 'socials':
         return <SocialsSection />;
-      case 'preview':
-        return <PortfolioPreview />;
       default:
         return <ProfileEditorView />;
     }

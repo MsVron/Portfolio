@@ -95,8 +95,24 @@ public class ProfileController {
         if (user == null) {
             return ResponseEntity.status(404).body("User not found");
         }
+        
         PortfolioSettings settings = portfolioSettingsRepository.findByUserId(user.getId())
                 .orElse(null);
+                
+        // If settings don't exist, create default settings
+        if (settings == null) {
+            settings = new PortfolioSettings();
+            settings.setUserId(user.getId());
+            settings.setTheme("default");
+            settings.setLayout("standard");
+            settings.setColorPrimary("#007bff");
+            settings.setColorSecondary("#6c757d");
+            settings.setFontFamily("Roboto, sans-serif");
+            settings.setIsPublic(true); // Set portfolio to public by default
+            settings.setUpdatedAt(LocalDateTime.now());
+            portfolioSettingsRepository.save(settings);
+        }
+        
         return ResponseEntity.ok(settings);
     }
 

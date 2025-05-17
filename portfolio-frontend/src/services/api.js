@@ -4,13 +4,30 @@ const api = axios.create({
   baseURL: 'http://localhost:8081/api',
 });
 
+// Request interceptor
 api.interceptors.request.use(config => {
+  console.log(`API Request: ${config.method.toUpperCase()} ${config.baseURL}${config.url}`, config.data || '');
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+// Response interceptor
+api.interceptors.response.use(
+  response => {
+    console.log(`API Response: ${response.status} from ${response.config.url}`, response.data);
+    return response;
+  },
+  error => {
+    console.error(`API Error: ${error.config?.method?.toUpperCase() || 'UNKNOWN'} ${error.config?.url || 'UNKNOWN'}`, 
+      error.response?.status || 'No status', 
+      error.response?.data || error.message || 'No error message'
+    );
+    return Promise.reject(error);
+  }
+);
 
 export const register = (data) => api.post('/auth/register', data);
 export const login = (data) => api.post('/auth/login', data);
@@ -43,5 +60,14 @@ export const getPortfolioSections = () => api.get('/profile/sections');
 export const addPortfolioSection = (data) => api.post('/profile/sections', data);
 export const updatePortfolioSection = (id, data) => api.put(`/profile/sections/${id}`, data);
 export const deletePortfolioSection = (id) => api.delete(`/profile/sections/${id}`);
+
+// Public portfolio endpoints (no auth required)
+export const getPublicProfile = (username) => api.get(`/portfolios/${username}`);
+export const getPublicProjects = (username) => api.get(`/portfolios/${username}/projects`);
+export const getPublicSkills = (username) => api.get(`/portfolios/${username}/skills`);
+export const getPublicEducation = (username) => api.get(`/portfolios/${username}/education`);
+export const getPublicExperience = (username) => api.get(`/portfolios/${username}/experience`);
+export const getPublicSocialLinks = (username) => api.get(`/portfolios/${username}/social-links`);
+export const getPublicPortfolioSections = (username) => api.get(`/portfolios/${username}/sections`);
 
 export default api;

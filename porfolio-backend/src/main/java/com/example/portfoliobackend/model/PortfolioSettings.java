@@ -31,7 +31,7 @@ public class PortfolioSettings {
     private String fontFamily;
 
     @Column(name = "is_public", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isPublic;
+    private Boolean isPublic = true;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
