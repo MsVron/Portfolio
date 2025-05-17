@@ -1,18 +1,60 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import ProfileEditor from '../components/dashboard/ProfileEditor';
+import ProfileEditorView from '../components/dashboard/ProfileEditorView';
 import PortfolioPreview from '../components/dashboard/PortfolioPreview';
+import Sidebar from '../components/dashboard/Sidebar';
+import EducationSection from '../components/dashboard/EducationSection';
+import SkillsSection from '../components/dashboard/SkillsSection';
+import ProjectsSection from '../components/dashboard/ProjectsSection';
+import ExperienceSection from '../components/dashboard/ExperienceSection';
+import PortfolioSection from '../components/dashboard/PortfolioSection';
+import SocialsSection from '../components/dashboard/SocialsSection';
 
 const DashboardPage = () => {
   const { user } = useContext(AuthContext);
+  const [activeItem, setActiveItem] = useState('profile');
 
   if (!user) return <div className="container mx-auto p-4">Please log in.</div>;
 
+  // Render the active component based on the selected sidebar item
+  const renderContent = () => {
+    switch (activeItem) {
+      case 'profile':
+        return <ProfileEditorView />;
+      case 'education':
+        return <EducationSection />;
+      case 'skills':
+        return <SkillsSection />;
+      case 'projects':
+        return <ProjectsSection />;
+      case 'experience':
+        return <ExperienceSection />;
+      case 'portfolio':
+        return <PortfolioSection />;
+      case 'socials':
+        return <SocialsSection />;
+      case 'preview':
+        return <PortfolioPreview />;
+      default:
+        return <ProfileEditorView />;
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-      <ProfileEditor />
-      <PortfolioPreview />
+      <h1 className="text-3xl font-bold mb-8 text-white">Dashboard</h1>
+      
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Sidebar */}
+        <div className="md:w-1/4">
+          <Sidebar activeItem={activeItem} setActiveItem={setActiveItem} />
+        </div>
+        
+        {/* Content Area */}
+        <div className="md:w-3/4 flex-1">
+          {renderContent()}
+        </div>
+      </div>
     </div>
   );
 };

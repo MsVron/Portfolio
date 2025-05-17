@@ -43,6 +43,8 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll() // Allow access to uploaded files
+                .requestMatchers("/api/skills").permitAll() // Allow access to skills endpoint
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

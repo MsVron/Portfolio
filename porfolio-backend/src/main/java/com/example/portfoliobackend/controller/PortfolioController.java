@@ -27,13 +27,7 @@ public class PortfolioController {
         existingSettings.setColorPrimary(settings.getColorPrimary());
         existingSettings.setColorSecondary(settings.getColorSecondary());
         existingSettings.setFontFamily(settings.getFontFamily());
-        existingSettings.setCustomDomain(settings.getCustomDomain());
         existingSettings.setIsPublic(settings.getIsPublic());
-        existingSettings.setCustomCss(settings.getCustomCss());
-        existingSettings.setCustomJs(settings.getCustomJs());
-        existingSettings.setMetaDescription(settings.getMetaDescription());
-        existingSettings.setMetaKeywords(settings.getMetaKeywords());
-        existingSettings.setGoogleAnalyticsId(settings.getGoogleAnalyticsId());
         existingSettings.setUpdatedAt(java.time.LocalDateTime.now());
         settingsRepository.save(existingSettings);
         return ResponseEntity.ok("Settings updated");

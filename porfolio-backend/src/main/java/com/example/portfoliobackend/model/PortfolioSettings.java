@@ -15,10 +15,10 @@ public class PortfolioSettings {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "theme", columnDefinition = "VARCHAR(50) DEFAULT 'default'")
+    @Column(columnDefinition = "VARCHAR(50) DEFAULT 'default'")
     private String theme;
 
-    @Column(name = "layout", columnDefinition = "VARCHAR(50) DEFAULT 'standard'")
+    @Column(columnDefinition = "VARCHAR(50) DEFAULT 'standard'")
     private String layout;
 
     @Column(name = "color_primary", columnDefinition = "VARCHAR(20) DEFAULT '#007bff'")
@@ -30,26 +30,8 @@ public class PortfolioSettings {
     @Column(name = "font_family", columnDefinition = "VARCHAR(100) DEFAULT 'Roboto, sans-serif'")
     private String fontFamily;
 
-    @Column(name = "custom_domain")
-    private String customDomain;
-
     @Column(name = "is_public", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isPublic;
-
-    @Column(name = "custom_css", columnDefinition = "TEXT")
-    private String customCss;
-
-    @Column(name = "custom_js", columnDefinition = "TEXT")
-    private String customJs;
-
-    @Column(name = "meta_description", columnDefinition = "TEXT")
-    private String metaDescription;
-
-    @Column(name = "meta_keywords")
-    private String metaKeywords;
-
-    @Column(name = "google_analytics_id")
-    private String googleAnalyticsId;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
@@ -69,20 +51,8 @@ public class PortfolioSettings {
     public void setColorSecondary(String colorSecondary) { this.colorSecondary = colorSecondary; }
     public String getFontFamily() { return fontFamily; }
     public void setFontFamily(String fontFamily) { this.fontFamily = fontFamily; }
-    public String getCustomDomain() { return customDomain; }
-    public void setCustomDomain(String customDomain) { this.customDomain = customDomain; }
     public Boolean getIsPublic() { return isPublic; }
     public void setIsPublic(Boolean isPublic) { this.isPublic = isPublic; }
-    public String getCustomCss() { return customCss; }
-    public void setCustomCss(String customCss) { this.customCss = customCss; }
-    public String getCustomJs() { return customJs; }
-    public void setCustomJs(String customJs) { this.customJs = customJs; }
-    public String getMetaDescription() { return metaDescription; }
-    public void setMetaDescription(String metaDescription) { this.metaDescription = metaDescription; }
-    public String getMetaKeywords() { return metaKeywords; }
-    public void setMetaKeywords(String metaKeywords) { this.metaKeywords = metaKeywords; }
-    public String getGoogleAnalyticsId() { return googleAnalyticsId; }
-    public void setGoogleAnalyticsId(String googleAnalyticsId) { this.googleAnalyticsId = googleAnalyticsId; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

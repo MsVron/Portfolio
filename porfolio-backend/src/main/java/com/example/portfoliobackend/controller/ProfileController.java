@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/profile")
@@ -42,6 +44,31 @@ public class ProfileController {
     }
 
     // User Profile Update
+    @GetMapping
+    public ResponseEntity<?> getProfile() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+        
+        // Create a custom response map with snake_case keys to match frontend expectations
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", user.getId());
+        response.put("username", user.getUsername());
+        response.put("email", user.getEmail());
+        response.put("first_name", user.getFirstName());
+        response.put("last_name", user.getLastName());
+        response.put("bio", user.getBio());
+        response.put("profile_image", user.getProfileImage());
+        response.put("job_title", user.getJobTitle());
+        response.put("location", user.getLocation());
+        response.put("created_at", user.getCreatedAt());
+        response.put("updated_at", user.getUpdatedAt());
+        
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping
     public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -88,13 +115,7 @@ public class ProfileController {
         existingSettings.setColorPrimary(settings.getColorPrimary());
         existingSettings.setColorSecondary(settings.getColorSecondary());
         existingSettings.setFontFamily(settings.getFontFamily());
-        existingSettings.setCustomDomain(settings.getCustomDomain());
         existingSettings.setIsPublic(settings.getIsPublic());
-        existingSettings.setCustomCss(settings.getCustomCss());
-        existingSettings.setCustomJs(settings.getCustomJs());
-        existingSettings.setMetaDescription(settings.getMetaDescription());
-        existingSettings.setMetaKeywords(settings.getMetaKeywords());
-        existingSettings.setGoogleAnalyticsId(settings.getGoogleAnalyticsId());
         existingSettings.setUpdatedAt(LocalDateTime.now());
         portfolioSettingsRepository.save(existingSettings);
         return ResponseEntity.ok("Settings updated");
@@ -184,14 +205,40 @@ public class ProfileController {
 
     @PostMapping("/skills")
     public ResponseEntity<?> addUserSkill(@Valid @RequestBody UserSkill userSkill) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username).orElse(null);
-        if (user == null) {
-            return ResponseEntity.status(404).body("User not found");
+        try {
+            System.out.println("Received skill: " + userSkill.getSkillId() + ", Proficiency: " + userSkill.getProficiency() + ", Years: " + userSkill.getYearsExperience());
+            
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(username).orElse(null);
+            if (user == null) {
+                return ResponseEntity.status(404).body("User not found");
+            }
+            
+            // Ensure all required fields are present
+            if (userSkill.getSkillId() == null) {
+                return ResponseEntity.badRequest().body("Skill ID is required");
+            }
+            
+            userSkill.setUserId(user.getId());
+            
+            // Set default values if not provided
+            if (userSkill.getProficiency() == null) {
+                userSkill.setProficiency(3);
+            }
+            
+            if (userSkill.getYearsExperience() == null) {
+                userSkill.setYearsExperience(0f);
+            }
+            
+            UserSkill savedSkill = userSkillRepository.save(userSkill);
+            System.out.println("Saved skill with ID: " + savedSkill.getId());
+            
+            return ResponseEntity.ok("Skill added");
+        } catch (Exception e) {
+            System.err.println("Error adding skill: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error adding skill: " + e.getMessage());
         }
-        userSkill.setUserId(user.getId());
-        userSkillRepository.save(userSkill);
-        return ResponseEntity.ok("Skill added");
     }
 
     @DeleteMapping("/skills/{id}")

@@ -1,6 +1,7 @@
 package com.example.portfoliobackend.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "user_skills", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "skill_id"}))
@@ -15,16 +16,18 @@ public class UserSkill {
     private Long userId;
 
     @Column(name = "skill_id", nullable = false)
+    @JsonProperty("skillId")
     private Long skillId;
 
     @Column(columnDefinition = "TINYINT DEFAULT 3")
-    private Integer proficiency;
+    private Integer proficiency = 3;
 
     @Column(name = "years_experience")
-    private Float yearsExperience;
+    @JsonProperty("yearsExperience")
+    private Float yearsExperience = 0f;
 
     @Column(name = "display_order", columnDefinition = "INT DEFAULT 0")
-    private Integer displayOrder;
+    private Integer displayOrder = 0;
 
     // Getters and Setters
     public Long getId() { return id; }
