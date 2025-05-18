@@ -31,7 +31,7 @@ api.interceptors.response.use(
 
 export const register = (data) => api.post('/auth/register', data);
 export const login = (data) => api.post('/auth/login', data);
-export const getUser = () => api.get('/auth/me');
+export const getUser = () => api.get('/profile');
 export const updateProfile = (data) => api.put('/profile', data);
 export const getProfile = () => api.get('/profile');
 export const getPortfolioSettings = () => api.get('/profile/settings');

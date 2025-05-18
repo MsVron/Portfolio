@@ -18,7 +18,7 @@ public class UploadDirTestController {
     private String uploadDir;
 
     @GetMapping("/upload-dir")
-    public ResponseEntity<?> testUploadDir() {
+    public ResponseEntity<Map<String, Object>> testUploadDir() {
         Map<String, Object> response = new HashMap<>();
         try {
             File directory = new File(uploadDir);
