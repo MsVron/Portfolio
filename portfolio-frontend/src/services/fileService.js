@@ -2,6 +2,24 @@ import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8081/api';
 
+// Debug function to test an uploaded file URL
+export const testImageUrl = (imageUrl) => {
+  console.log('Image URL to test:', imageUrl);
+  // Extract just the path portion from the full URL
+  try {
+    const url = new URL(imageUrl);
+    // Try to access just the file on the server
+    const testUrl = imageUrl;
+    console.log('Testing URL access:', testUrl);
+    // Display this URL in the console for manual verification
+    console.log('Open this URL in a new tab to verify it works:', testUrl);
+    return testUrl;
+  } catch (error) {
+    console.error('Invalid URL format:', error);
+    return null;
+  }
+};
+
 // Upload a file to the server
 export const uploadFile = async (formData) => {
   console.log('Uploading file to:', `${API_URL}/upload`);
@@ -22,6 +40,10 @@ export const uploadFile = async (formData) => {
     });
     
     console.log('Upload response:', response.data);
+    // Debug the image URL to verify it's accessible
+    if (response.data && response.data.fileUrl) {
+      testImageUrl(response.data.fileUrl);
+    }
     return response.data;
   } catch (error) {
     console.error('Error uploading file:', error);

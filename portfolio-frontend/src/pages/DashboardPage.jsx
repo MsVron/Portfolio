@@ -8,6 +8,7 @@ import ProjectsSection from '../components/dashboard/ProjectsSection';
 import ExperienceSection from '../components/dashboard/ExperienceSection';
 import PortfolioSection from '../components/dashboard/PortfolioSection';
 import SocialsSection from '../components/dashboard/SocialsSection';
+import AddProjectsSectionScript from './AddProjectsSectionScript';
 
 const DashboardPage = () => {
   const { user } = useContext(AuthContext);
@@ -50,6 +51,7 @@ const DashboardPage = () => {
         {/* Content Area */}
         <div className="md:w-3/4 flex-1">
           {renderContent()}
+          <AddProjectsSectionScript />
         </div>
       </div>
     </div>
