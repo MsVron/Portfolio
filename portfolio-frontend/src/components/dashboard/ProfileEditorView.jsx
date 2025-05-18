@@ -3,6 +3,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { updateProfile, getProfile } from '../../services/api';
 import { uploadFile } from '../../services/fileService';
 import FileUpload from '../common/FileUpload';
+import Notification from '../common/Notification';
 
 const ProfileEditorView = () => {
   const { user } = useContext(AuthContext);
@@ -75,10 +76,7 @@ const ProfileEditorView = () => {
       // Close edit mode for the section
       setEditMode({ ...editMode, [section]: false });
       
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage('');
-      }, 3000);
+      // Clear success message after 3 seconds is now handled by the Notification component
     } catch (err) {
       setError(err.response?.data || 'Failed to update profile');
     }
@@ -96,12 +94,13 @@ const ProfileEditorView = () => {
         </div>
       )}
       
-      {successMessage && (
-        <div className="bg-green-900/40 border border-green-600 text-green-200 px-4 py-3 rounded mb-6">
-          {successMessage}
-        </div>
-      )}
-
+      <Notification 
+        type="success" 
+        message={successMessage} 
+        onClose={() => setSuccessMessage('')} 
+        duration={3000}
+      />
+      
       {/* Personal Information Section */}
       <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8 border border-gray-700">
         <div className="flex justify-between items-center mb-6">
@@ -271,26 +270,39 @@ const ProfileEditorView = () => {
                 }
                 
                 try {
+                  setError(''); // Clear any previous errors
                   const result = await uploadFile(formData);
-                  setProfile({ ...profile, profile_image: result.fileUrl });
+                  
+                  if (result && result.fileUrl) {
+                    setProfile({ ...profile, profile_image: result.fileUrl });
+                    
+                    // Immediately save the profile with the new image
+                    const profileData = {
+                      firstName: profile.first_name,
+                      lastName: profile.last_name,
+                      bio: profile.bio,
+                      profileImage: result.fileUrl,
+                      jobTitle: profile.job_title,
+                      location: profile.location
+                    };
+                    
+                    await updateProfile(profileData);
+                    setSuccessMessage('Profile image updated successfully');
+                  } else {
+                    setError('Failed to get image URL from server');
+                  }
                 } catch (err) {
                   console.error('Error uploading profile image:', err);
-                  setError('Failed to upload image');
+                  setError('Failed to upload image. Please try again.');
                 }
               }}
             />
             <div className="mt-4">
               <button
-                onClick={() => handleSubmitSection('profileImage')}
-                className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 text-sm font-medium"
-              >
-                Save Changes
-              </button>
-              <button
                 onClick={() => toggleEditMode('profileImage')}
-                className="ml-4 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 text-sm font-medium"
+                className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 text-sm font-medium"
               >
-                Cancel
+                Close
               </button>
             </div>
           </div>

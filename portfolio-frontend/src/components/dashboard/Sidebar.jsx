@@ -2,13 +2,13 @@ import React from 'react';
 
 const Sidebar = ({ activeItem, setActiveItem }) => {
   const menuItems = [
-    { id: 'profile', label: 'Profile', icon: 'user' },
+    { id: 'profile', label: 'Personal Info', icon: 'user' },
     { id: 'education', label: 'Education', icon: 'academic-cap' },
-    { id: 'skills', label: 'Skills', icon: 'code-bracket' },
+    { id: 'skills', label: 'Skills & Expertise', icon: 'code-bracket' },
     { id: 'projects', label: 'Projects', icon: 'document' },
     { id: 'experience', label: 'Work Experience', icon: 'briefcase' },
-    { id: 'portfolio', label: 'Portfolio', icon: 'photo' },
-    { id: 'socials', label: 'Social Links', icon: 'link' },
+    { id: 'portfolio', label: 'Portfolio Settings', icon: 'photo' },
+    { id: 'socials', label: 'Social Media Links', icon: 'link' },
   ];
 
   // Map of icon names to their SVG paths
@@ -67,7 +67,7 @@ const Sidebar = ({ activeItem, setActiveItem }) => {
 
   return (
     <div className="bg-gray-800 w-64 h-full p-5 rounded-lg border border-gray-700 shadow-lg">
-      <h2 className="text-xl font-bold text-white mb-6">Dashboard</h2>
+      <h2 className="text-xl font-bold text-white mb-6">Profile Editor</h2>
       <nav className="space-y-2">
         {menuItems.map((item) => (
           <button

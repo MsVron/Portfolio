@@ -31,11 +31,14 @@ const Navbar = () => {
             <div className="flex space-x-4">
               {user ? (
                 <>
+                  <Link to="/" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                    Home
+                  </Link>
                   <Link to="/dashboard" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                    Dashboard
+                    Manage Profile
                   </Link>
                   <Link to={`/portfolio/${user.username}`} className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                    My Portfolio
+                    View Portfolio
                   </Link>
                   <button 
                     onClick={handleLogout} 
@@ -94,11 +97,14 @@ const Navbar = () => {
         <div className="px-2 pt-2 pb-3 space-y-1">
           {user ? (
             <>
+              <Link to="/" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                Home
+              </Link>
               <Link to="/dashboard" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                Dashboard
+                Manage Profile
               </Link>
               <Link to={`/portfolio/${user.username}`} className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                My Portfolio
+                View Portfolio
               </Link>
               <button 
                 onClick={handleLogout} 

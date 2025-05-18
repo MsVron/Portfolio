@@ -11,7 +11,7 @@ const Home = () => {
       <div className="container mx-auto px-4 py-12 animate-fadeIn">
         <div className="max-w-4xl mx-auto text-center mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Welcome back, <span className="text-purple-400">{user.first_name || user.username}</span>
+            Welcome back, <span className="text-purple-400">{user.first_name && user.last_name|| user.username}</span>
           </h1>
           <p className="text-lg text-gray-300">
             Manage your portfolio and showcase your professional journey

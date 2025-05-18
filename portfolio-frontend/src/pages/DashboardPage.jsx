@@ -39,7 +39,7 @@ const DashboardPage = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-8 text-white">Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-8 text-white">Profile Management</h1>
       
       <div className="flex flex-col md:flex-row gap-8">
         {/* Sidebar */}

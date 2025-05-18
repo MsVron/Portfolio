@@ -32,22 +32,43 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        // Skip JWT check ONLY for login and register endpoints, and allow OPTIONS requests
-        if (path.equals("/api/auth/login") || path.equals("/api/auth/register") || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        // Skip JWT check for login, register, and public endpoints
+        if (path.startsWith("/api/auth/") || path.startsWith("/uploads/") || 
+            path.startsWith("/api/portfolio/") || path.startsWith("/api/skills") || 
+            "OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Apply JWT check for other paths, including /api/auth/me
+        // Apply JWT check for other paths
         String authHeader = request.getHeader("Authorization");
+        String token = null;
+        String username = null;
+        
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
+            token = authHeader.substring(7);
+            try {
+                username = jwtUtil.getUsernameFromToken(token);
+            } catch (Exception e) {
+                logger.error("JWT token validation failed: " + e.getMessage());
+            }
+        }
+        
+        // Once we get the token, validate it
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            
+            // If token is valid, configure Spring Security to manually set authentication
             if (jwtUtil.validateToken(token)) {
-                String username = jwtUtil.getUsernameFromToken(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UsernamePasswordAuthenticationToken authentication = 
+                    new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                        
+                authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request));
+                    
+                // After setting the Authentication in the context, we specify
+                // that the current user is authenticated
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
