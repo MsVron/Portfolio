@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,6 +25,7 @@ public class PublicPortfolioController {
     private final WorkExperienceRepository workExperienceRepository;
     private final SocialLinkRepository socialLinkRepository;
     private final PortfolioSectionRepository portfolioSectionRepository;
+    private final SkillRepository skillRepository;
 
     public PublicPortfolioController(UserRepository userRepository,
                               PortfolioSettingsRepository portfolioSettingsRepository,
@@ -31,7 +34,8 @@ public class PublicPortfolioController {
                               EducationRepository educationRepository,
                               WorkExperienceRepository workExperienceRepository,
                               SocialLinkRepository socialLinkRepository,
-                              PortfolioSectionRepository portfolioSectionRepository) {
+                              PortfolioSectionRepository portfolioSectionRepository,
+                              SkillRepository skillRepository) {
         this.userRepository = userRepository;
         this.portfolioSettingsRepository = portfolioSettingsRepository;
         this.projectRepository = projectRepository;
@@ -40,6 +44,7 @@ public class PublicPortfolioController {
         this.workExperienceRepository = workExperienceRepository;
         this.socialLinkRepository = socialLinkRepository;
         this.portfolioSectionRepository = portfolioSectionRepository;
+        this.skillRepository = skillRepository;
     }
     
     // Helper method to check if portfolio is public
@@ -139,14 +144,31 @@ public class PublicPortfolioController {
     // Get public skills by username
     @GetMapping("/{username}/skills")
     public ResponseEntity<?> getPublicSkills(@PathVariable String username) {
-        ResponseEntity<?> validationResult = validateUserAndPortfolio(username);
-        if (validationResult != null) {
-            return validationResult;
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
         }
-        
-        User user = userRepository.findByUsername(username).orElse(null);
-        List<UserSkill> skills = userSkillRepository.findByUserId(user.getId());
-        return ResponseEntity.ok(skills);
+        User user = userOptional.get();
+        if (!isPortfolioPublic(user.getId())) {
+            return ResponseEntity.status(403).body("User profile is not public");
+        }
+        List<UserSkill> userSkills = userSkillRepository.findByUserId(user.getId());
+        // Fetch skill details for each user skill
+        List<Map<String, Object>> skillsWithDetails = new ArrayList<>();
+        for (UserSkill userSkill : userSkills) {
+            Optional<Skill> skill = skillRepository.findById(userSkill.getSkillId());
+            if (skill.isPresent()) {
+                Map<String, Object> skillData = new HashMap<>();
+                skillData.put("id", userSkill.getId());
+                skillData.put("skillId", userSkill.getSkillId());
+                skillData.put("skillName", skill.get().getName());
+                skillData.put("category", skill.get().getCategory());
+                skillData.put("proficiency", userSkill.getProficiency());
+                skillData.put("yearsExperience", userSkill.getYearsExperience());
+                skillsWithDetails.add(skillData);
+            }
+        }
+        return ResponseEntity.ok(skillsWithDetails);
     }
 
     // Get public education by username

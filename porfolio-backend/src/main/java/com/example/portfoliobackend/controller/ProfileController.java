@@ -3,6 +3,7 @@ package com.example.portfoliobackend.controller;
 import com.example.portfoliobackend.model.*;
 import com.example.portfoliobackend.repository.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/profile")
@@ -25,6 +27,7 @@ public class ProfileController {
     private final WorkExperienceRepository workExperienceRepository;
     private final SocialLinkRepository socialLinkRepository;
     private final PortfolioSectionRepository portfolioSectionRepository;
+    private final SkillRepository skillRepository;
 
     public ProfileController(UserRepository userRepository,
                              PortfolioSettingsRepository portfolioSettingsRepository,
@@ -33,7 +36,8 @@ public class ProfileController {
                              EducationRepository educationRepository,
                              WorkExperienceRepository workExperienceRepository,
                              SocialLinkRepository socialLinkRepository,
-                             PortfolioSectionRepository portfolioSectionRepository) {
+                             PortfolioSectionRepository portfolioSectionRepository,
+                             SkillRepository skillRepository) {
         this.userRepository = userRepository;
         this.portfolioSettingsRepository = portfolioSettingsRepository;
         this.projectRepository = projectRepository;
@@ -42,6 +46,7 @@ public class ProfileController {
         this.workExperienceRepository = workExperienceRepository;
         this.socialLinkRepository = socialLinkRepository;
         this.portfolioSectionRepository = portfolioSectionRepository;
+        this.skillRepository = skillRepository;
     }
 
     // User Profile Update
@@ -213,13 +218,28 @@ public class ProfileController {
     // User Skills
     @GetMapping("/skills")
     public ResponseEntity<?> getUserSkills() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username).orElse(null);
-        if (user == null) {
-            return ResponseEntity.status(404).body("User not found");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
         }
-        List<UserSkill> skills = userSkillRepository.findByUserId(user.getId());
-        return ResponseEntity.ok(skills);
+        User user = (User) auth.getPrincipal();
+        List<UserSkill> userSkills = userSkillRepository.findByUserId(user.getId());
+        // Fetch skill details for each user skill
+        List<Map<String, Object>> skillsWithDetails = new ArrayList<>();
+        for (UserSkill userSkill : userSkills) {
+            Optional<Skill> skill = skillRepository.findById(userSkill.getSkillId());
+            if (skill.isPresent()) {
+                Map<String, Object> skillData = new HashMap<>();
+                skillData.put("id", userSkill.getId());
+                skillData.put("skillId", userSkill.getSkillId());
+                skillData.put("skillName", skill.get().getName());
+                skillData.put("category", skill.get().getCategory());
+                skillData.put("proficiency", userSkill.getProficiency());
+                skillData.put("yearsExperience", userSkill.getYearsExperience());
+                skillsWithDetails.add(skillData);
+            }
+        }
+        return ResponseEntity.ok(skillsWithDetails);
     }
 
     @PostMapping("/skills")
