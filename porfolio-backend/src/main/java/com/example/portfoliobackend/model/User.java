@@ -42,6 +42,9 @@ public class User implements UserDetails {
 
     private String location;
 
+    @Column(name = "cv_url")
+    private String cvUrl;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -155,6 +158,14 @@ public class User implements UserDetails {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getCvUrl() {
+        return cvUrl;
+    }
+
+    public void setCvUrl(String cvUrl) {
+        this.cvUrl = cvUrl;
     }
 
     public LocalDateTime getCreatedAt() {

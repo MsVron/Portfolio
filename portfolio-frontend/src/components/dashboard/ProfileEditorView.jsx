@@ -16,6 +16,7 @@ const ProfileEditorView = () => {
     profile_image: '',
     job_title: '',
     location: '',
+    cv_url: '',
   });
   
   // Edit mode states for each section
@@ -41,6 +42,7 @@ const ProfileEditorView = () => {
           profile_image: res.data.profile_image || '',
           job_title: res.data.job_title || '',
           location: res.data.location || '',
+          cv_url: res.data.cv_url || '',
         });
       }).catch(err => {
         setError('Failed to load profile data');
@@ -66,7 +68,8 @@ const ProfileEditorView = () => {
         bio: profile.bio,
         profileImage: profile.profile_image,
         jobTitle: profile.job_title,
-        location: profile.location
+        location: profile.location,
+        cvUrl: profile.cv_url
       };
       
       await updateProfile(profileData);
@@ -157,6 +160,18 @@ const ProfileEditorView = () => {
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
               />
             </div>
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-gray-300 mb-2 text-sm font-medium">CV/Resume Link (Google Drive or similar)</label>
+              <input
+                type="url"
+                name="cv_url"
+                value={profile.cv_url}
+                onChange={handleProfileChange}
+                placeholder="https://drive.google.com/file/d/..."
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+              />
+              <p className="text-gray-400 text-xs mt-1">Add a link to your CV/resume that will be available for download on your portfolio page</p>
+            </div>
             <div className="col-span-1 md:col-span-2 mt-4">
               <button
                 onClick={() => handleSubmitSection('personalInfo')}
@@ -190,6 +205,19 @@ const ProfileEditorView = () => {
               <p className="text-gray-400 text-sm mb-1">Location</p>
               <p className="text-white">{profile.location || '(Not specified)'}</p>
             </div>
+            {profile.cv_url && (
+              <div className="col-span-1 md:col-span-2 mt-2">
+                <p className="text-gray-400 text-sm mb-1">CV/Resume</p>
+                <a 
+                  href={profile.cv_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-purple-400 hover:text-purple-300 transition-colors"
+                >
+                  Download CV/Resume
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -283,7 +311,8 @@ const ProfileEditorView = () => {
                       bio: profile.bio,
                       profileImage: result.fileUrl,
                       jobTitle: profile.job_title,
-                      location: profile.location
+                      location: profile.location,
+                      cvUrl: profile.cv_url
                     };
                     
                     await updateProfile(profileData);

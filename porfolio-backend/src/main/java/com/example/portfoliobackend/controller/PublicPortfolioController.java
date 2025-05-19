@@ -105,6 +105,7 @@ public class PublicPortfolioController {
         response.put("profile_image", user.getProfileImage());
         response.put("job_title", user.getJobTitle());
         response.put("location", user.getLocation());
+        response.put("cv_url", user.getCvUrl());
         
         // Include portfolio settings
         Map<String, Object> settingsMap = new HashMap<>();

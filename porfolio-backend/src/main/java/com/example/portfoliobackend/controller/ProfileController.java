@@ -63,6 +63,7 @@ public class ProfileController {
         response.put("profile_image", user.getProfileImage());
         response.put("job_title", user.getJobTitle());
         response.put("location", user.getLocation());
+        response.put("cv_url", user.getCvUrl());
         response.put("created_at", user.getCreatedAt());
         response.put("updated_at", user.getUpdatedAt());
         
@@ -82,6 +83,7 @@ public class ProfileController {
         user.setProfileImage(request.getProfileImage());
         user.setJobTitle(request.getJobTitle());
         user.setLocation(request.getLocation());
+        user.setCvUrl(request.getCvUrl());
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
         return ResponseEntity.ok("Profile updated successfully");
@@ -547,6 +549,7 @@ public class ProfileController {
         private String profileImage;
         private String jobTitle;
         private String location;
+        private String cvUrl;
 
         public String getFirstName() { return firstName; }
         public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -560,5 +563,7 @@ public class ProfileController {
         public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
         public String getLocation() { return location; }
         public void setLocation(String location) { this.location = location; }
+        public String getCvUrl() { return cvUrl; }
+        public void setCvUrl(String cvUrl) { this.cvUrl = cvUrl; }
     }
 }
