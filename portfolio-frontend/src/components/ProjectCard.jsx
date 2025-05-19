@@ -1,6 +1,11 @@
 import React from 'react';
 
 const ProjectCard = ({ project }) => {
+  const ensureAbsoluteUrl = (url) => {
+    if (!url) return url;
+    return url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
+  };
+
   return (
     <div className="bg-gray-700 p-4 rounded-lg overflow-hidden">
       <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
@@ -15,7 +20,7 @@ const ProjectCard = ({ project }) => {
             <div className="flex gap-3 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
               {project.github_url && (
                 <a 
-                  href={project.github_url} 
+                  href={ensureAbsoluteUrl(project.github_url)} 
                   target="_blank" 
                   rel="noreferrer"
                   className="bg-purple-700 text-white p-3 rounded-full hover:bg-purple-600 transition-colors shadow-xl"
@@ -60,7 +65,7 @@ const ProjectCard = ({ project }) => {
         )}
         {project.github_url && (
           <a 
-            href={project.github_url} 
+            href={ensureAbsoluteUrl(project.github_url)} 
             target="_blank" 
             rel="noreferrer"
             className="text-purple-400 hover:text-purple-300 flex items-center text-sm"

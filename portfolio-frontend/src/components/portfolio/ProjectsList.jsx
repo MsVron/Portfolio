@@ -1,6 +1,11 @@
 import React from 'react';
 
 const ProjectsList = ({ projects }) => {
+  const ensureAbsoluteUrl = (url) => {
+    if (!url) return url;
+    return url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {projects.map(project => (
@@ -9,13 +14,13 @@ const ProjectsList = ({ projects }) => {
           className={`bg-gray-700 p-4 rounded-lg overflow-hidden relative ${project.github_url ? 'cursor-pointer hover:bg-gray-600 transition-colors' : ''}`}
           onClick={() => {
             if (project.github_url) {
-              window.open(project.github_url, '_blank', 'noopener,noreferrer');
+              window.open(ensureAbsoluteUrl(project.github_url), '_blank', 'noopener,noreferrer');
             }
           }}
         >
           {project.github_url ? (
             <a 
-              href={project.github_url} 
+              href={ensureAbsoluteUrl(project.github_url)} 
               target="_blank" 
               rel="noreferrer" 
               className="text-xl font-bold text-white mb-2 block hover:text-purple-400 transition-colors"
@@ -36,7 +41,7 @@ const ProjectsList = ({ projects }) => {
                 <div className="flex gap-3 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
                   {project.github_url && (
                     <a 
-                      href={project.github_url} 
+                      href={ensureAbsoluteUrl(project.github_url)} 
                       target="_blank" 
                       rel="noreferrer"
                       className="bg-purple-700 text-white p-3 rounded-full hover:bg-purple-600 transition-colors shadow-xl"
@@ -71,7 +76,7 @@ const ProjectsList = ({ projects }) => {
           {/* GitHub button - still visible but now with stopPropagation to avoid double-clicking issues */}
           {project.github_url && (
             <a 
-              href={project.github_url} 
+              href={ensureAbsoluteUrl(project.github_url)} 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-md mb-3 transition-colors"
