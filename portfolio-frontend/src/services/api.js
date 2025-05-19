@@ -41,7 +41,11 @@ export const addProject = (data) => api.post('/profile/projects', data);
 export const updateProject = (id, data) => api.put(`/profile/projects/${id}`, data);
 export const deleteProject = (id) => api.delete(`/profile/projects/${id}`);
 export const getUserSkills = () => api.get('/profile/skills');
-export const addUserSkill = (data) => api.post('/profile/skills', data);
+export const addUserSkill = (data) => {
+  console.log("In API service, sending skill data:", data);
+  console.log("skillId type:", typeof data.skillId, "value:", data.skillId);
+  return api.post('/profile/skills', data);
+};
 export const deleteUserSkill = (id) => api.delete(`/profile/skills/${id}`);
 export const getAllSkills = () => api.get('/skills');
 export const getEducation = () => api.get('/profile/education');

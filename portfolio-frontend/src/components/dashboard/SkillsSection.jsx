@@ -40,7 +40,13 @@ const SkillsSection = () => {
   const loadAvailableSkills = async () => {
     try {
       const res = await getAllSkills();
-      setAvailableSkills(res.data);
+      // Ensure each skill has a proper skill_id
+      const processedSkills = res.data.map(skill => ({
+        ...skill,
+        skill_id: parseInt(skill.skill_id, 10) // Ensure skill_id is a number
+      }));
+      console.log("Available skills loaded:", processedSkills);
+      setAvailableSkills(processedSkills);
       setSkillsLoadError(false);
     } catch (err) {
       console.error('Failed to load available skills:', err);
@@ -49,16 +55,88 @@ const SkillsSection = () => {
   };
 
   const handleSkillChange = (e) => {
-    const value = e.target.type === 'range' || e.target.type === 'number'
-      ? parseFloat(e.target.value)
-      : e.target.value;
-    setNewSkill({ ...newSkill, [e.target.name]: value });
+    const { name, value, type } = e.target;
+    
+    // For number inputs (range and number types)
+    if (type === 'range' || type === 'number') {
+      setNewSkill(prev => ({
+        ...prev,
+        [name]: parseFloat(value)
+      }));
+      return;
+    }
+    
+    // For the skill select
+    if (name === 'skill_id') {
+      console.log("Selected skill_id raw value:", value);
+      setNewSkill(prev => ({
+        ...prev,
+        skill_id: value
+      }));
+      return;
+    }
+    
+    // For any other inputs
+    setNewSkill(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSkillSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addUserSkill(newSkill);
+      console.log("Raw newSkill from form:", newSkill);
+      
+      // Additional validation to ensure skill_id is not empty
+      if (!newSkill.skill_id) {
+        setError('Skill ID is required');
+        return;
+      }
+      
+      let skillId = null;
+      
+      // First check if the skill_id is a number string (like "11")
+      if (/^\d+$/.test(newSkill.skill_id)) {
+        skillId = parseInt(newSkill.skill_id, 10);
+        console.log("Parsed skill_id directly as number:", skillId);
+      } 
+      // If not a number, try to match against skill names
+      else {
+        const selectedSkillName = newSkill.skill_id;
+        console.log("Looking for skill with name:", selectedSkillName);
+        
+        // Try to find the skill in the available skills list
+        const matchedSkill = availableSkills.find(
+          skill => `${skill.name} (${skill.category})` === selectedSkillName
+        );
+        
+        if (matchedSkill) {
+          skillId = parseInt(matchedSkill.skill_id, 10);
+          console.log("Found matching skill:", matchedSkill.name, "with ID:", skillId);
+        } else {
+          console.error("Could not find matching skill for:", selectedSkillName);
+          setError('Could not find a matching skill');
+          return;
+        }
+      }
+      
+      // Final validation
+      if (isNaN(skillId) || skillId <= 0) {
+        setError('Skill ID must be a valid number');
+        return;
+      }
+      
+      // Map snake_case to camelCase and convert to correct data types for the API
+      const skillData = {
+        skillId: skillId,
+        proficiency: Number(newSkill.proficiency),
+        yearsExperience: Number(newSkill.years_experience)
+      };
+      
+      console.log("Sending skillData to API:", skillData);
+      
+      await addUserSkill(skillData);
       setNewSkill({ 
         skill_id: '', 
         proficiency: 3,
@@ -67,6 +145,7 @@ const SkillsSection = () => {
       loadSkills();
       setError('');
     } catch (err) {
+      console.error("Error adding skill:", err);
       setError(err.response?.data || 'Failed to add skill');
     }
   };
@@ -105,11 +184,18 @@ const SkillsSection = () => {
                 required
               >
                 <option value="">Select a skill</option>
-                {availableSkills.map(skill => (
-                  <option key={skill.skill_id} value={skill.skill_id}>
-                    {skill.name} ({skill.category})
-                  </option>
-                ))}
+                {availableSkills.map((skill, index) => {
+                  // Make sure each skill has a valid skill_id, or use index as fallback
+                  const skillId = skill.skill_id || index + 1;
+                  return (
+                    <option 
+                      key={`skill-${skillId}-${index}`} 
+                      value={String(skillId)}
+                    >
+                      {skill.name} ({skill.category})
+                    </option>
+                  );
+                })}
               </select>
             ) : (
               <input
@@ -183,7 +269,7 @@ const SkillsSection = () => {
               
               // Find skill info if available
               const skillInfo = availableSkills.length > 0 
-                ? availableSkills.find(s => s.skill_id == skillId || s.skillId == skillId)
+                ? availableSkills.find(s => Number(s.skill_id) === Number(skillId) || Number(s.skillId) === Number(skillId))
                 : null;
               
               return (

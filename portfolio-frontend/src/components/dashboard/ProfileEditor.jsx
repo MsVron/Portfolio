@@ -208,14 +208,26 @@ const ProfileEditor = () => {
     try {
       console.log("Submitting skill:", newSkill);
       
+      // Additional validation to ensure skill_id is not empty
+      if (!newSkill.skill_id) {
+        setError('Skill ID is required');
+        return;
+      }
+      
       // Map snake_case to camelCase for the API
       const skillData = {
-        skillId: parseInt(newSkill.skill_id, 10), // Convert to number
-        proficiency: parseInt(newSkill.proficiency, 10), // Convert to number
-        yearsExperience: parseFloat(newSkill.years_experience) // Convert to number
+        skillId: Number(newSkill.skill_id), // Convert to number
+        proficiency: Number(newSkill.proficiency), // Convert to number
+        yearsExperience: Number(newSkill.years_experience) // Convert to number
       };
       
       console.log("Transformed skill data:", skillData);
+      
+      // Extra check to ensure skillId is a valid number
+      if (isNaN(skillData.skillId) || skillData.skillId === 0) {
+        setError('Skill ID must be a valid number');
+        return;
+      }
       
       const response = await addUserSkill(skillData);
       console.log("Skill added response:", response);
@@ -740,7 +752,7 @@ const ProfileEditor = () => {
                 
                 // Find skill info if available
                 const skillInfo = availableSkills.length > 0 
-                  ? availableSkills.find(s => s.skill_id == skillId || s.skillId == skillId)
+                  ? availableSkills.find(s => Number(s.skill_id) === Number(skillId) || Number(s.skillId) === Number(skillId))
                   : null;
                 
                 return (

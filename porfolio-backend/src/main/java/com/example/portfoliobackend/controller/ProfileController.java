@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/profile")
@@ -224,7 +225,12 @@ public class ProfileController {
     @PostMapping("/skills")
     public ResponseEntity<?> addUserSkill(@Valid @RequestBody UserSkill userSkill) {
         try {
-            System.out.println("Received skill: " + userSkill.getSkillId() + ", Proficiency: " + userSkill.getProficiency() + ", Years: " + userSkill.getYearsExperience());
+            System.out.println("======= DEBUG: ADD USER SKILL =======");
+            System.out.println("Received skill object: " + userSkill);
+            System.out.println("Skill ID: " + userSkill.getSkillId() + " (Type: " + (userSkill.getSkillId() != null ? userSkill.getSkillId().getClass().getName() : "null") + ")");
+            System.out.println("Proficiency: " + userSkill.getProficiency());
+            System.out.println("Years Experience: " + userSkill.getYearsExperience());
+            System.out.println("======================================");
             
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(username).orElse(null);
@@ -234,6 +240,7 @@ public class ProfileController {
             
             // Ensure all required fields are present
             if (userSkill.getSkillId() == null) {
+                System.out.println("ERROR: Skill ID is null");
                 return ResponseEntity.badRequest().body("Skill ID is required");
             }
             
