@@ -20,6 +20,8 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorMessage from '../components/common/ErrorMessage';
 import NotFoundMessage from '../components/common/NotFoundMessage';
 import SkillsList from '../components/portfolio/SkillsList';
+import EducationList from '../components/portfolio/EducationList';
+import ExperienceList from '../components/portfolio/ExperienceList';
 
 const PortfolioPage = () => {
   const { username } = useParams();
@@ -169,6 +171,22 @@ const PortfolioPage = () => {
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
           <h2 className="text-2xl font-bold mb-4 text-white">Skills & Expertise</h2>
           <SkillsList skills={skills} />
+        </div>
+      )}
+
+      {/* Education section if not in custom sections */}
+      {education.length > 0 && !portfolioSections.some(section => section.section_type === 'education') && (
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+          <h2 className="text-2xl font-bold mb-4 text-white">Education</h2>
+          <EducationList education={education} />
+        </div>
+      )}
+
+      {/* Work Experience section if not in custom sections */}
+      {experience.length > 0 && !portfolioSections.some(section => section.section_type === 'experience') && (
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+          <h2 className="text-2xl font-bold mb-4 text-white">Work Experience</h2>
+          <ExperienceList experience={experience} />
         </div>
       )}
 
