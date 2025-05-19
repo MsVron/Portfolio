@@ -6,7 +6,6 @@ import EducationSection from '../components/dashboard/EducationSection';
 import SkillsSection from '../components/dashboard/SkillsSection';
 import ProjectsSection from '../components/dashboard/ProjectsSection';
 import ExperienceSection from '../components/dashboard/ExperienceSection';
-import PortfolioSection from '../components/dashboard/PortfolioSection';
 import SocialsSection from '../components/dashboard/SocialsSection';
 import AddProjectsSectionScript from './AddProjectsSectionScript';
 
@@ -29,8 +28,6 @@ const DashboardPage = () => {
         return <ProjectsSection />;
       case 'experience':
         return <ExperienceSection />;
-      case 'portfolio':
-        return <PortfolioSection />;
       case 'socials':
         return <SocialsSection />;
       default:

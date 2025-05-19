@@ -7,7 +7,6 @@ const Sidebar = ({ activeItem, setActiveItem }) => {
     { id: 'skills', label: 'Skills & Expertise', icon: 'code-bracket' },
     { id: 'projects', label: 'Projects', icon: 'document' },
     { id: 'experience', label: 'Work Experience', icon: 'briefcase' },
-    { id: 'portfolio', label: 'Portfolio Settings', icon: 'photo' },
     { id: 'socials', label: 'Social Media Links', icon: 'link' },
   ];
 

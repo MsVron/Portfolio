@@ -1,6 +1,7 @@
 package com.example.portfoliobackend.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -27,6 +28,7 @@ public class Project {
     private String projectUrl;
 
     @Column(name = "github_url")
+    @JsonProperty("github_url")
     private String githubUrl;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")

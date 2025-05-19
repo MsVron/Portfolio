@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import {
-  updateProfile, getPortfolioSettings, updatePortfolioSettings,
+  updateProfile,
   getProjects, addProject, updateProject, deleteProject,
   getUserSkills, addUserSkill, deleteUserSkill, getAllSkills,
   getEducation, addEducation, updateEducation, deleteEducation,
@@ -25,15 +25,6 @@ const ProfileEditor = () => {
     job_title: '',
     location: '',
     created_at: null,
-    updated_at: null
-  });
-  const [settings, setSettings] = useState({
-    theme: 'default',
-    layout: 'standard',
-    color_primary: '#007bff',
-    color_secondary: '#6c757d',
-    font_family: 'Roboto, sans-serif',
-    is_public: true,
     updated_at: null
   });
   const [newProject, setNewProject] = useState({ 
@@ -92,7 +83,6 @@ const ProfileEditor = () => {
 
   useEffect(() => {
     if (user) {
-      getPortfolioSettings().then(res => setSettings(res.data || settings));
       getProjects().then(res => setProjects(res.data));
       getUserSkills().then(res => setSkills(res.data));
       
@@ -146,21 +136,6 @@ const ProfileEditor = () => {
       alert('Profile updated');
     } catch (err) {
       setError(err.response?.data || 'Failed to update profile');
-    }
-  };
-
-  const handleSettingsChange = (e) => {
-    setSettings({ ...settings, [e.target.name]: e.target.value });
-  };
-
-  const handleSettingsSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await updatePortfolioSettings(settings);
-      setError('');
-      alert('Settings updated');
-    } catch (err) {
-      setError(err.response?.data || 'Failed to update settings');
     }
   };
 
@@ -356,7 +331,7 @@ const ProfileEditor = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
-      <h1 className="text-3xl font-bold mb-6 text-white">Edit Profile</h1>
+      <h1 className="text-3xl font-bold mb-6 text-white">Profile Editor</h1>
       {error && <div className="bg-red-900/40 border border-red-600 text-red-200 px-4 py-3 rounded mb-6">{error}</div>}
 
       {/* Profile Form */}
@@ -460,95 +435,6 @@ const ProfileEditor = () => {
               className="w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 text-sm font-medium"
             >
               Update Profile
-            </button>
-          </div>
-        </form>
-      </div>
-
-      {/* Portfolio Settings Form */}
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8 border border-gray-700">
-        <h2 className="text-2xl font-bold mb-6 text-white">Portfolio Settings</h2>
-        <form onSubmit={handleSettingsSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-gray-300 mb-2 text-sm font-medium">Theme</label>
-            <select
-              name="theme"
-              value={settings.theme}
-              onChange={handleSettingsChange}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-            >
-              <option value="default">Default</option>
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
-              <option value="minimal">Minimal</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-gray-300 mb-2 text-sm font-medium">Layout</label>
-            <select
-              name="layout"
-              value={settings.layout}
-              onChange={handleSettingsChange}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-            >
-              <option value="standard">Standard</option>
-              <option value="modern">Modern</option>
-              <option value="classic">Classic</option>
-              <option value="creative">Creative</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-gray-300 mb-2 text-sm font-medium">Primary Color</label>
-            <input
-              type="color"
-              name="color_primary"
-              value={settings.color_primary}
-              onChange={handleSettingsChange}
-              className="w-full h-10 px-1 py-1 bg-gray-700 border border-gray-600 rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-300 mb-2 text-sm font-medium">Secondary Color</label>
-            <input
-              type="color"
-              name="color_secondary"
-              value={settings.color_secondary}
-              onChange={handleSettingsChange}
-              className="w-full h-10 px-1 py-1 bg-gray-700 border border-gray-600 rounded"
-            />
-          </div>
-          <div className="col-span-1 md:col-span-2">
-            <label className="block text-gray-300 mb-2 text-sm font-medium">Font Family</label>
-            <select
-              name="font_family"
-              value={settings.font_family}
-              onChange={handleSettingsChange}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-            >
-              <option value="Roboto, sans-serif">Roboto</option>
-              <option value="Open Sans, sans-serif">Open Sans</option>
-              <option value="Lato, sans-serif">Lato</option>
-              <option value="Poppins, sans-serif">Poppins</option>
-            </select>
-          </div>
-          <div className="flex items-center">
-            <label className="flex items-center text-gray-300 text-sm font-medium">
-              <input
-                type="checkbox"
-                name="is_public"
-                checked={settings.is_public}
-                onChange={(e) => setSettings({ ...settings, is_public: e.target.checked })}
-                className="mr-2 form-checkbox bg-gray-700 border-gray-600 text-purple-500 focus:ring-purple-500"
-              />
-              Public Portfolio
-            </label>
-          </div>
-          <div className="col-span-1 md:col-span-2">
-            <button
-              type="submit"
-              className="w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 text-sm font-medium"
-            >
-              Update Settings
             </button>
           </div>
         </form>
