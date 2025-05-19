@@ -19,6 +19,7 @@ import ContactSection from '../components/portfolio/ContactSection';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorMessage from '../components/common/ErrorMessage';
 import NotFoundMessage from '../components/common/NotFoundMessage';
+import SkillsList from '../components/portfolio/SkillsList';
 
 const PortfolioPage = () => {
   const { username } = useParams();
@@ -162,6 +163,14 @@ const PortfolioPage = () => {
     <div className="container mx-auto p-4">
       <ProfileHeader profile={profile} socialLinks={socialLinks} />
       <AboutSection bio={profile.bio} />
+
+      {/* Skills section if not in custom sections and skills exist */}
+      {skills.length > 0 && !portfolioSections.some(section => section.section_type === 'skills') && (
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+          <h2 className="text-2xl font-bold mb-4 text-white">Skills & Expertise</h2>
+          <SkillsList skills={skills} />
+        </div>
+      )}
 
       {/* Projects section if not in custom sections */}
       {projects.length > 0 && !portfolioSections.some(section => section.section_type === 'projects') && (
